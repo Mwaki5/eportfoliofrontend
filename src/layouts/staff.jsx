@@ -28,12 +28,6 @@ const Admin = () => {
   const profileRef = useRef(null);
   const { email, profilePic } = user || {};
 
-  const handleLogout = () => {
-    logout();
-    toast.success("Logged out successfully");
-    navigate("/login");
-  };
-
   useEffect(() => {
     const closeOnOutsideClick = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -108,14 +102,6 @@ const Admin = () => {
                   <FaUserCircle />
                   View Profile
                 </Link>
-
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  <FaSignOutAlt />
-                  Logout
-                </button>
               </div>
             </div>
           )}
@@ -228,7 +214,7 @@ const Admin = () => {
 
           <div className="p-4 border-t border-gray-700">
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-semibold hover:opacity-95 transition"
             >
               <FaSignOutAlt />
