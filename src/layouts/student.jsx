@@ -1,4 +1,21 @@
-// ...imports stay the same
+import React, { useState, useRef, useEffect } from "react";
+import logo from "../assets/logo.jpg";
+import {
+  FaArchway,
+  FaBook,
+  FaGraduationCap,
+  FaUserGraduate,
+  FaSignOutAlt,
+  FaBars,
+  FaTimes,
+  FaChevronDown,
+  FaUserCircle,
+} from "react-icons/fa";
+import useAuth from "../hooks/useAuth";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import ProfileAvatar from "../components/ProfileAvator";
 const StudentLayout = () => {
   const axios = useAxiosPrivate();
   const { user, logout } = useAuth();
