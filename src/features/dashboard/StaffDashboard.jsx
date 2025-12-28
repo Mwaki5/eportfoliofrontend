@@ -120,7 +120,7 @@ const StaffDashboard = () => {
           return (
             <Link
               key={index}
-              to={card.link}
+              //to={card.link}
               className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 dark:border-gray-700 hover:scale-105"
             >
               <div className="flex items-center justify-between">
@@ -176,7 +176,7 @@ const StaffDashboard = () => {
             Manage your units and view student progress.
           </p>
           <Link
-            to="/admin/unit/view"
+            to="/staff/unit/edit"
             className="mt-4 inline-block px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
           >
             View All Units

@@ -25,7 +25,7 @@ const StudentLayout = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const profileRef = useRef(null);
-  const { email, lastname, profilePic } = user || {};
+  const { email, lastname, firstname, profilePic } = user || {};
 
   const handleLogout = () => {
     logout();
@@ -100,7 +100,6 @@ const StudentLayout = () => {
             className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-100 transition"
           >
             <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-gray-700">{lastname}</p>
               <p className="text-xs text-gray-500">Student</p>
             </div>
             <div className="h-9 w-9 rounded-full overflow-hidden">
@@ -121,7 +120,7 @@ const StudentLayout = () => {
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl z-50">
               <div className="px-4 py-3">
                 <p className="text-sm font-semibold text-gray-800">
-                  Student Account
+                  {firstname} {lastname}
                 </p>
                 <p className="text-xs text-gray-500 truncate">{email}</p>
               </div>
