@@ -69,7 +69,6 @@ const AddEvidence = () => {
       reset();
       setUploadProgress(0);
     } catch (error) {
-      console.log(error);
       const errorMessage =
         error.response?.data?.message || "Failed to upload evidence";
       toast.error(errorMessage);
