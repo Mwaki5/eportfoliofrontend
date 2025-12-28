@@ -1,22 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import logo from "../assets/logo.jpg";
-import {
-  FaArchway,
-  FaBook,
-  FaGraduationCap,
-  FaUserGraduate,
-  FaSignOutAlt,
-  FaBars,
-  FaTimes,
-  FaChevronDown,
-  FaUserCircle,
-} from "react-icons/fa";
-import useAuth from "../hooks/useAuth";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import ProfileAvatar from "../components/ProfileAvator";
-
+// ...imports stay the same
 const StudentLayout = () => {
   const axios = useAxiosPrivate();
   const { user, logout } = useAuth();
@@ -46,6 +28,42 @@ const StudentLayout = () => {
 
   const toggleMenu = (menu) =>
     setOpenMenu((prev) => (prev === menu ? null : menu));
+
+  const menus = [
+    {
+      key: "dashboard",
+      icon: <FaArchway />,
+      title: "Dashboard",
+      links: [["/student/dashboard", "Dashboard"]],
+    },
+    {
+      key: "evidence",
+      icon: <FaArchway />,
+      title: "Evidence",
+      links: [
+        ["/student/evidence/add", "Add Evidence"],
+        ["/student/evidence/view", "View My Evidence"],
+      ],
+    },
+    {
+      key: "marks",
+      icon: <FaGraduationCap />,
+      title: "View Marks",
+      links: [["/student/marks/view", "View My Marks"]],
+    },
+    {
+      key: "enrollment",
+      icon: <FaBook />,
+      title: "Enrolled Units",
+      links: [["/student/enrollments/view", "Enrolled Units"]],
+    },
+    {
+      key: "profile",
+      icon: <FaUserGraduate />,
+      title: "Profile",
+      links: [["/student/profile/view", "View Profile"]],
+    },
+  ];
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -106,7 +124,7 @@ const StudentLayout = () => {
                   View Profile
                 </Link>
                 <button
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 >
                   <FaSignOutAlt />
@@ -139,72 +157,46 @@ const StudentLayout = () => {
           </div>
 
           <nav className="px-4 py-6 space-y-2 overflow-y-auto">
-            <Link
-              to="/student/dashboard"
-              className="flex items-center px-2 py-2 rounded-md hover:bg-gray-800"
-            >
-              <FaArchway className="mr-3" />
-              Dashboard
-            </Link>
-
-            {/* ACCORDION MENUS */}
-            {[
-              {
-                key: "evidence",
-                icon: <FaArchway />,
-                title: "Evidence",
-                links: [
-                  ["/student/evidence/add", "Add Evidence"],
-                  ["/student/evidence/view", "View My Evidence"],
-                ],
-              },
-              {
-                key: "marks",
-                icon: <FaGraduationCap />,
-                title: "View Marks",
-                links: [["/student/marks/view", "View My Marks"]],
-              },
-              {
-                key: "enrollment",
-                icon: <FaBook />,
-                title: "Enrolled Units",
-                links: [["/student/enrollments/view", "Enrolled Units"]],
-              },
-              {
-                key: "profile",
-                icon: <FaUserGraduate />,
-                title: "Profile",
-                links: [["/student/profile/view", "View Profile"]],
-              },
-            ].map((menu) => (
+            {menus.map((menu) => (
               <div key={menu.key}>
-                <button
-                  onClick={() => toggleMenu(menu.key)}
-                  className="w-full flex items-center px-2 py-2 rounded-md hover:bg-gray-800 transition"
-                >
-                  <span className="mr-3">{menu.icon}</span>
-                  <span className="flex-1 text-left">{menu.title}</span>
-                  {menu.links.length > 1 && (
-                    <FaChevronDown
-                      className={`text-xs transition-transform ${
-                        openMenu === menu.key ? "rotate-180" : ""
-                      }`}
-                    />
-                  )}
-                </button>
-                {openMenu === menu.key && menu.links.length > 1 && (
-                  <div className="ml-8 mt-1 space-y-1">
-                    {menu.links.map(([to, label]) => (
-                      <Link
-                        key={to}
-                        to={to}
-                        onClick={() => setSidebarOpen(false)}
-                        className="block px-2 py-1 text-sm rounded hover:bg-gray-700"
-                      >
-                        {label}
-                      </Link>
-                    ))}
-                  </div>
+                {menu.links.length === 1 ? (
+                  <Link
+                    to={menu.links[0][0]}
+                    className="flex items-center px-2 py-2 rounded-md hover:bg-gray-800"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <span className="mr-3">{menu.icon}</span>
+                    {menu.links[0][1]}
+                  </Link>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => toggleMenu(menu.key)}
+                      className="w-full flex items-center px-2 py-2 rounded-md hover:bg-gray-800 transition"
+                    >
+                      <span className="mr-3">{menu.icon}</span>
+                      <span className="flex-1 text-left">{menu.title}</span>
+                      <FaChevronDown
+                        className={`text-xs transition-transform ${
+                          openMenu === menu.key ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {openMenu === menu.key && (
+                      <div className="ml-8 mt-1 space-y-1">
+                        {menu.links.map(([to, label]) => (
+                          <Link
+                            key={to}
+                            to={to}
+                            onClick={() => setSidebarOpen(false)}
+                            className="block px-2 py-1 text-sm rounded hover:bg-gray-700"
+                          >
+                            {label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             ))}
