@@ -21,6 +21,11 @@ const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
@@ -102,6 +107,13 @@ const Admin = () => {
                   <FaUserCircle />
                   View Profile
                 </Link>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  <FaSignOutAlt />
+                  Logout
+                </button>
               </div>
             </div>
           )}
@@ -212,15 +224,7 @@ const Admin = () => {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-gray-700">
-            <button
-              onClick={logout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-semibold hover:opacity-95 transition"
-            >
-              <FaSignOutAlt />
-              Logout
-            </button>
-          </div>
+          <div className="p-4 border-t border-gray-700"></div>
         </aside>
 
         {/* MAIN CONTENT */}

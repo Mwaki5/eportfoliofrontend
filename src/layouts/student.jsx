@@ -30,7 +30,7 @@ const StudentLayout = () => {
   const handleLogout = () => {
     logout();
     toast.success("Logged out successfully");
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -73,12 +73,6 @@ const StudentLayout = () => {
       icon: <FaBook />,
       title: "Enrolled Units",
       links: [["/student/enrollments/view", "Enrolled Units"]],
-    },
-    {
-      key: "profile",
-      icon: <FaUserGraduate />,
-      title: "Profile",
-      links: [["/student/profile/view", "View Profile"]],
     },
   ];
 
