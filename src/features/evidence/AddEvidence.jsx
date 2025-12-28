@@ -87,6 +87,7 @@ const AddEvidence = () => {
           `/api/enrollments/student/${encodeURIComponent(user.userId)}`
         );
         setUnits([res.data.data[0].Unit] || []);
+        console.log(units);
       } catch (error) {
         console.log("Failed to fetch enrolled units:", error);
       }
