@@ -5,6 +5,7 @@ import {
   FaUserGraduate,
   FaBook,
   FaListAlt,
+  FaChalkboardTeacher,
   FaSignOutAlt,
   FaBars,
   FaTimes,
@@ -16,11 +17,13 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ProfileAvatar from "../components/ProfileAvator";
 
-const Staff = () => {
+const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
 
   const profileRef = useRef(null);
   const { email, profilePic } = user || {};
@@ -31,52 +34,48 @@ const Staff = () => {
     navigate("/login");
   };
 
-  // Close profile dropdown when clicking outside
   useEffect(() => {
-    const handler = (e) => {
+    const closeOnOutsideClick = (e) => {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
         setProfileOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
   }, []);
 
+  const toggleMenu = (menu) =>
+    setOpenMenu((prev) => (prev === menu ? null : menu));
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="h-16 bg-white shadow-lg flex justify-between items-center px-4 md:px-6 w-full z-20 fixed top-0 left-0">
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 w-full h-16 bg-white shadow-sm z-30 flex items-center justify-between px-4 md:px-6">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden text-gray-700 hover:text-green-600 p-2 rounded-lg hover:bg-green-50 transition"
+          className="lg:hidden p-2 rounded-md hover:bg-gray-100"
         >
-          {sidebarOpen ? (
-            <FaTimes className="text-2xl" />
-          ) : (
-            <FaBars className="text-2xl" />
-          )}
+          {sidebarOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
         </button>
 
-        <h1 className="text-xl font-bold text-green-700 hidden sm:block">
+        <h1 className="hidden sm:block text-lg font-semibold text-green-700">
           Dashboard
         </h1>
 
-        <div className="grid place-content-center">
-          <img className="h-12 object-contain" src={logo} alt="logo" />
-        </div>
+        <img src={logo} alt="logo" className="h-10 object-contain" />
 
-        {/* User Profile */}
+        {/* PROFILE DROPDOWN */}
         <div ref={profileRef} className="relative">
           <button
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-100 transition focus:outline-none"
+            onClick={() => setProfileOpen((p) => !p)}
+            className="flex items-center gap-3 px-2 py-1 rounded-full hover:bg-gray-100 transition"
           >
             <div className="hidden sm:block text-right">
               <p className="text-sm font-medium text-gray-700">{email}</p>
               <p className="text-xs text-gray-500">Staff</p>
             </div>
 
-            <div className="h-10 w-10 rounded-full overflow-hidden border border-gray-200">
+            <div className="h-9 w-9 rounded-full overflow-hidden">
               <ProfileAvatar
                 profilePic={profilePic}
                 rounded
@@ -91,10 +90,9 @@ const Staff = () => {
             />
           </button>
 
-          {/* Dropdown */}
           {profileOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white border rounded-xl shadow-lg z-50 overflow-hidden">
-              <div className="px-4 py-3 border-b">
+            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl z-50">
+              <div className="px-4 py-3">
                 <p className="text-sm font-semibold text-gray-800">
                   Staff Account
                 </p>
@@ -105,7 +103,7 @@ const Staff = () => {
                 <Link
                   to="/staff/profile"
                   onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                  className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100"
                 >
                   <FaUserCircle />
                   View Profile
@@ -113,7 +111,7 @@ const Staff = () => {
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                 >
                   <FaSignOutAlt />
                   Logout
@@ -125,93 +123,113 @@ const Staff = () => {
       </header>
 
       <div className="flex pt-16">
-        {/* Mobile overlay */}
+        {/* MOBILE OVERLAY */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+            className="fixed inset-0 bg-black/40 z-20 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
-        {/* Sidebar */}
+        {/* SIDEBAR */}
         <aside
-          className={`w-64 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] transition-transform duration-300 shadow-2xl ${
+          className={`fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white z-30 transform transition-transform duration-300 ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           } lg:translate-x-0`}
         >
-          <div className="flex items-center justify-center h-20 border-b border-gray-700">
+          <div className="h-16 flex items-center justify-center border-b border-gray-700">
             <FaArchway className="mr-2" />
-            <span className="font-bold">Staff Panel</span>
+            <span className="font-semibold">Staff Panel</span>
           </div>
 
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="px-4 py-6 space-y-2 overflow-y-auto">
             <Link
               to="/staff/dashboard"
-              className="flex items-center px-2 py-2 rounded hover:bg-gray-800 transition"
+              className="flex items-center px-2 py-2 rounded-md hover:bg-gray-800"
             >
               <FaArchway className="mr-3" />
               Dashboard
             </Link>
 
-            <details>
-              <summary className="flex items-center cursor-pointer px-2 py-2 rounded hover:bg-gray-800">
-                <FaUserGraduate className="mr-3" />
-                Manage Students
-              </summary>
-              <div className="ml-8 mt-2 space-y-1">
-                <Link
-                  to="/staff/student/add"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
+            {/* ACCORDION MENUS */}
+            {[
+              {
+                key: "students",
+                icon: <FaUserGraduate />,
+                title: "Manage Students",
+                links: [
+                  ["/staff/student/add", "Add Students"],
+                  ["/staff/student/edit/details", "Edit Student"],
+                  ["/staff/student/filter/details", "Filter Students"],
+                ],
+              },
+              {
+                key: "units",
+                icon: <FaListAlt />,
+                title: "Manage Units",
+                links: [
+                  ["/staff/unit/add", "Add Unit"],
+                  ["/staff/unit/edit", "Edit Units"],
+                  ["/staff/unit/filter", "Filter Units"],
+                ],
+              },
+              {
+                key: "marks",
+                icon: <FaChalkboardTeacher />,
+                title: "Manage Marks",
+                links: [
+                  ["/staff/mark/add", "Register Marks"],
+                  ["/staff/mark/edit", "Edit Marks"],
+                  ["/staff/mark/view", "Filter Marks"],
+                ],
+              },
+              {
+                key: "enrollment",
+                icon: <FaBook />,
+                title: "Manage Enrollment",
+                links: [
+                  ["/staff/enrollment/add", "Create Enrollment"],
+                  ["/staff/enrollment/view", "Edit Enrollment"],
+                  ["/staff/enrollment/filter", "Filter Enrollment"],
+                ],
+              },
+            ].map((menu) => (
+              <div key={menu.key}>
+                <button
+                  onClick={() => toggleMenu(menu.key)}
+                  className="w-full flex items-center px-2 py-2 rounded-md hover:bg-gray-800 transition"
                 >
-                  Add Students
-                </Link>
-                <Link
-                  to="/staff/student/edit/details"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
-                >
-                  Edit Student
-                </Link>
-                <Link
-                  to="/staff/student/filter/details"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
-                >
-                  Filter Students
-                </Link>
-              </div>
-            </details>
+                  <span className="mr-3">{menu.icon}</span>
+                  <span className="flex-1 text-left">{menu.title}</span>
+                  <FaChevronDown
+                    className={`text-xs transition-transform ${
+                      openMenu === menu.key ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-            <details>
-              <summary className="flex items-center cursor-pointer px-2 py-2 rounded hover:bg-gray-800">
-                <FaListAlt className="mr-3" />
-                Manage Units
-              </summary>
-              <div className="ml-8 mt-2 space-y-1">
-                <Link
-                  to="/staff/unit/add"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
-                >
-                  Add Unit
-                </Link>
-                <Link
-                  to="/staff/unit/edit"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
-                >
-                  Edit Units
-                </Link>
-                <Link
-                  to="/staff/unit/filter"
-                  className="block hover:bg-gray-700 px-2 py-1 rounded"
-                >
-                  Filter Units
-                </Link>
+                {openMenu === menu.key && (
+                  <div className="ml-8 mt-1 space-y-1">
+                    {menu.links.map(([to, label]) => (
+                      <Link
+                        key={to}
+                        to={to}
+                        onClick={() => setSidebarOpen(false)}
+                        className="block px-2 py-1 text-sm rounded hover:bg-gray-700"
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
-            </details>
+            ))}
           </nav>
 
-          <div className="border-t border-gray-700 p-4">
+          <div className="p-4 border-t border-gray-700">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl font-semibold transition"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-semibold hover:opacity-95 transition"
             >
               <FaSignOutAlt />
               Logout
@@ -219,8 +237,8 @@ const Staff = () => {
           </div>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 lg:ml-64 px-4 py-10 min-h-screen">
+        {/* MAIN CONTENT */}
+        <main className="flex-1 lg:ml-64 px-4 py-10">
           <div className="max-w-[1100px] mx-auto">
             <Outlet />
           </div>
@@ -230,4 +248,4 @@ const Staff = () => {
   );
 };
 
-export default Staff;
+export default Admin;
