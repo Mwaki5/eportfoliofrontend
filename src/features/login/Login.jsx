@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import axios from "../../api/axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -20,10 +20,11 @@ import { FaPersonRays, FaLock } from "react-icons/fa6";
 /* ---------------- Validation Schema ---------------- */
 const schema = yup.object({
   userId: yup.string().min(3).max(20).required("Username is required"),
-  password: yup.string().min(3).max(12).required("Password is required"),
+  password: yup.string().min(3).max(20).required("Password is required"),
 });
 
 const Login = () => {
+  const axios = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
   const { setUser, setAccessToken } = useAuth();

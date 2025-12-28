@@ -174,7 +174,7 @@ const ViewMyEvidence = () => {
                                 rounded={false}
                                 setObjectUrl={setObjectUrl}
                                 profilePic={img.filename}
-                                className="w-full"
+                                className="w-full h-48"
                               />
                             </div>
                             <p className="text-sm text-gray-500">

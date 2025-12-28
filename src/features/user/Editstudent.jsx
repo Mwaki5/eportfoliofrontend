@@ -39,7 +39,16 @@ const EditStudent = () => {
   }, [axios]);
 
   const handleSearch = () => {
-    fetchStudents(searchRef.current.value.trim());
+    const searchvalue = searchRef.current.value.trim();
+    if (!searchvalue) {
+      searchRef.current.focus();
+      fetchStudents();
+      setError("Type admission number or email in the search box");
+      return;
+    }
+    fetchStudents(searchvalue);
+
+    searchRef.current.value = "";
   };
 
   const handleEditClick = (student) => {

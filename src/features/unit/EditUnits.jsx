@@ -28,16 +28,36 @@ const EditUnit = () => {
   });
 
   // Fetch units
-  const fetchUnits = async (query = "") => {
+  const fetchUnits = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const endpoint = query ? `/api/units/search/${query}` : "/api/units";
-      const res = await axios.get(endpoint);
+      const res = await axios.get("/api/units/");
       setUnits(res.data.data || []);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch units");
-      toast.error("Failed to load records");
+      toast.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const searchUnit = async () => {
+    const query = searchRef.current.value.trim();
+    if (!query || query === "") {
+      searchRef.current.focus();
+      setError("Type unit code in the search box");
+      toast.error("Type unit code in the search box");
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await axios.get(`/api/units/search/${query}`);
+      setUnits(res.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to fetch units");
+      toast.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -45,9 +65,8 @@ const EditUnit = () => {
 
   useEffect(() => {
     fetchUnits();
+    searchRef.current.focus();
   }, [axios]);
-
-  const handleSearch = () => fetchUnits(searchRef.current.value.trim());
 
   const handleEditClick = (unit) => {
     setEditModalData({ open: true, unit });
@@ -72,11 +91,11 @@ const EditUnit = () => {
             type="text"
             placeholder="Search by unit code..."
             className="w-full pl-10 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-[#00966d] focus:bg-white outline-none transition-all"
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onKeyDown={(e) => e.key === "Enter" && searchUnit()}
           />
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#00966d]" />
           <button
-            onClick={handleSearch}
+            onClick={searchUnit}
             className="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-[#00966d] text-white text-xs font-semibold rounded-md hover:bg-[#007a58] transition-colors"
           >
             Search

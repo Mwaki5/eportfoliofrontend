@@ -53,8 +53,10 @@ const ViewStudentMarks = () => {
           user.userId
         )}/session/${encodeURIComponent(session)}`
       );
+
       setRecords(res.data.data || []);
     } catch (err) {
+      console.log(err);
       setError("Failed to load marks for session");
       toast.error("Failed to fetch session marks");
     } finally {

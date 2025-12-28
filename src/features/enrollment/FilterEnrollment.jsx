@@ -3,9 +3,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 import { FaEdit, FaTrash, FaPlus, FaTimes, FaSearch } from "react-icons/fa";
-import FormTitle from "../../components/FormTitle";
-import UpdateEnrollment from "./UpdateEnrollmentModal";
-import DeleteEnrollment from "./DeleteEnrollmentModal";
+
 import { FaFilter } from "react-icons/fa6";
 
 const FilterEnrollment = () => {
@@ -13,21 +11,16 @@ const FilterEnrollment = () => {
   const [enrollments, setEnrollments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Modal States
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedEnrollment, setSelectedEnrollment] = useState(null);
-
   // Filter States
   const [activeFilters, setActiveFilters] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState("studentName");
+  const [currentCategory, setCurrentCategory] = useState("all");
   const [currentValue, setCurrentValue] = useState("");
 
   // Define filter options
   const schemaOptions = {
     unitCode: [],
     level: ["Level 4", "Level 5", "Level 6"],
-    semester: ["2025/2026 April", "Summer", "Fall"],
+    session: ["2025/2026 April", "Summer", "Fall"],
   };
 
   /** Fetch enrollments based on active filters */
@@ -60,25 +53,6 @@ const FilterEnrollment = () => {
   }, [activeFilters, fetchEnrollments]);
 
   /** Delete enrollment */
-  const handleDeleteConfirm = async () => {
-    if (!selectedEnrollment) return;
-    setIsLoading(true);
-    try {
-      await axios.delete(`/api/enrollments/${selectedEnrollment.id}`);
-      toast.success("Enrollment removed successfully");
-      setEnrollments((prev) =>
-        prev.filter((e) => e.id !== selectedEnrollment.id)
-      );
-      setDeleteModalOpen(false);
-      setSelectedEnrollment(null);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to delete enrollment"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   /** Add filter */
   const addFilter = () => {
@@ -114,11 +88,11 @@ const FilterEnrollment = () => {
                 }}
                 className="h-9 border border-gray-300 rounded-md text-xs px-2 bg-gray-50 outline-none focus:ring-1 focus:ring-green-500"
               >
-                {Object.keys(schemaOptions).map((key) => (
-                  <option key={key} value={key}>
-                    {key.toUpperCase()}
-                  </option>
-                ))}
+                <option className="">all</option>
+                <option className="studentId">admission no.</option>
+                <option className="unitCode">unit code</option>
+                <option className="unitName">unit name</option>
+                <option className="session">session</option>
               </select>
             </div>
 
@@ -192,6 +166,7 @@ const FilterEnrollment = () => {
             <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-bold border-b">
               <tr>
                 <th className="px-6 py-4">Admission No.</th>
+                <th className="px-6 py-4">Student Name</th>
                 <th className="px-6 py-4">Unit Name</th>
                 <th className="px-6 py-4">Level</th>
                 <th className="px-6 py-4">Semester</th>
@@ -205,6 +180,9 @@ const FilterEnrollment = () => {
                 >
                   <td className="px-6 py-4 font-medium text-gray-700">
                     {enrollment.User?.userId}
+                  </td>
+                  <td className="px-6 py-4 font-medium text-gray-700">
+                    {enrollment.User?.firstname} {enrollment.User?.lastname}
                   </td>
                   <td className="px-6 py-4 font-medium text-gray-700">
                     {enrollment.Unit?.unitName}

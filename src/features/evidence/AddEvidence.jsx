@@ -86,8 +86,7 @@ const AddEvidence = () => {
         const res = await axios.get(
           `/api/enrollments/student/${encodeURIComponent(user.userId)}`
         );
-        setUnits([res.data.data[0].Unit] || []);
-        console.log(units);
+        setUnits(res.data.data);
       } catch (error) {
         console.log("Failed to fetch enrolled units:", error);
       }
@@ -124,8 +123,8 @@ const AddEvidence = () => {
             >
               <option value="">Select Unit</option>
               {units.map((unit) => (
-                <option key={unit.unitCode} value={unit.unitCode}>
-                  {unit.unitName}
+                <option key={unit.Unit.unitCode} value={unit.Unit.unitCode}>
+                  {unit.Unit.unitName}
                 </option>
               ))}
             </select>

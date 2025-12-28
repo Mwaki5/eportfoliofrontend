@@ -42,7 +42,7 @@ const Video = ({
   return (
     <video
       src={videoUrl || fallback}
-      className={`rounded-lg object-contain ${className}`}
+      className={`rounded-lg h-full object-contain ${className}`}
       controls
     />
   );
